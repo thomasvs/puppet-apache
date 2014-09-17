@@ -4,11 +4,11 @@
 #
 define apache::vhost::https (
   $virtualhost='_default_',
-  $server_name='localhost',
+  $server_name='localhost.localdomain',
   $server_aliases=undef,
   $includes=undef,
   $default_include=undef,
-  $certname=undef,
+  $certname='localhost.localdomain',
   $bundlename=undef
 ) {
   # Main template file
