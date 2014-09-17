@@ -10,7 +10,7 @@
 <% end -%>
 <% end -%>
 
-<% if !@default_include.empty? -%>
+<% if @default_include && !@default_include.empty? -%>
     Include conf.d/<%= @default %>
 <% else -%>
     DocumentRoot /var/www/html
