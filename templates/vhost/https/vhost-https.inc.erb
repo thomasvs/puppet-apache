@@ -30,7 +30,7 @@
     SSLCipherSuite HIGH!ADH
     SSLCertificateFile /etc/pki/tls/certs/<%= @certname %>.crt
     SSLCertificateKeyFile /etc/pki/tls/private/<%= @certname %>.key
-<% if has_variable?("bundlename") -%>
+<% if has_variable?("bundlename") and @bundlename -%>
     SSLCACertificateFile /etc/pki/tls/certs/<%= @bundlename %>.crt
 <% end -%>
 
