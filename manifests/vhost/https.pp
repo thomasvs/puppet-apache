@@ -4,6 +4,7 @@
 #
 define apache::vhost::https (
   $virtualhost='_default_',
+  $virtualhost_ipv6=undef,
   $server_name='localhost.localdomain',
   $server_aliases=undef,
   $includes=undef,
