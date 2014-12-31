@@ -23,6 +23,10 @@ define apache::cert (
       $dir = 'private'
       $filename = "${domain}.${type}"
     }
+    'ca-bundle': {
+      $dir = 'certs'
+      $filename = "${domain}.ca-bundle.crt"
+    }
     default: {
       fail("Unhandled apache::cert type ${type}")
     }
