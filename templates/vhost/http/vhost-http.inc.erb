@@ -14,6 +14,6 @@
     CustomLog logs/<%= @name %>-access_timed_log timed_combined
     ErrorLog logs/<%= @name %>_error_log
 
-    Include conf.d/container-<%= @name %>.inc
+    Include conf.d/container-http-<%= @name %>.inc
 
 </VirtualHost>
