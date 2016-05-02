@@ -1,7 +1,7 @@
 # = Define: apache::container::redirect
 #
 # This define creates a redirect container for apache, redirecting
-# old sites (in our case, credex.net) to getfinancing.com equivalents
+# old sites to their new equivalent (or http to https?)
 #
 # = Params
 #
@@ -16,16 +16,15 @@
 #
 define apache::container::redirect (
   $template = 'apache/container/redirect/container-redirect.inc.erb',
-  $http = false,
-  $https = false,
+  $protocol = 'http',
   $address = undef,
   $monitor = str2bool(hiera('monitor', true)),
   $monitor_tool = [ 'nagios' ],
+  $path='',
   $source,
   $target,
-  $path
 ) {
-  apache_httpd::file { "container-${name}.inc":
+  apache_httpd::file { "container-${protocol}-${name}.inc":
     ensure  => file,
     content => template($template),
   }
@@ -38,23 +37,21 @@ define apache::container::redirect (
       $interface = ''
       $interfacedesc = ''
     }
+    if ($protocol == 'https') {
+      $check_command_inc = ' --ssl'
+    } else {
+      $check_command_inc = ''
+    }
+
     $check_command = "check_http!-H ${source} --expect 301 \
-      --url /${path} --string '/${target}/${path}' ${interface}"
+      --url /${path} --string '/${target}/${path}' ${interface} \
+      ${check_command_inc}"
 
     $desc = "${interfacedesc} from apache::container::redirect"
 
-    if ($http == true) {
-      nagios::service { "${::hostname}_redirect_http_${source}":
-          check_command       => $check_command,
-          service_description => "redirect http://${source}/${path}${desc}",
-      }
-    }
-
-    if ($https == true) {
-      nagios::service { "${::hostname}_redirect_https_${source}":
-          check_command       => "${check_command} --ssl",
-          service_description => "redirect https://${source}/${path}${desc}",
-      }
+    nagios::service { "${::hostname}_redirect_${protocol}_${source}":
+      check_command       => $check_command,
+      service_description => "redirect ${protocol}://${source}/${path}${desc}",
     }
   }
 }
