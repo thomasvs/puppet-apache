@@ -8,10 +8,10 @@
 #   The domain-like name for which to deploy a certificate; used as part of the filename.
 # [*type*]
 #   The type of certificate; one of crt, key, ca-bundle
+# [*letsencrypt*]
+#   If true, symlink letsencrypt certificates instead.
 # [*source*]
 #   The base directory under puppet:// that points to the tls directory
-# [*letsencrypt*]
-#   If true (and no source specified), symlink letsencrypt certificates instead.
 #
 # === Examples
 #
@@ -32,8 +32,8 @@ define apache::cert (
   $c_mode = 0400,
   $c_notify = [],
   $directory = '/etc/pki/tls',
-  $source = '/modules/apache/tls',
   $letsencrypt = false,
+  $source = '/modules/apache/tls',
 ) {
 
   # FIXME: we could guess domain and type from name?
@@ -59,19 +59,19 @@ define apache::cert (
 
   }
 
-  if $source {
+  if $letsencrypt {
     file {"${directory}/${dir}/${filename}":
-      ensure => file,
-      source => "puppet://${source}/${dir}/${filename}",
+      ensure => link,
+      target => "/etc/letsencrypt/live/${domain}/${targetname}",
       owner  => $c_owner,
       group  => $c_group,
       mode   => $c_mode,
       notify => $c_notify
     }
-  } elsif $letsencrypt {
+  } elsif $source {
     file {"${directory}/${dir}/${filename}":
-      ensure => link,
-      target => "/etc/letsencrypt/live/${domain}/${targetname}",
+      ensure => file,
+      source => "puppet://${source}/${dir}/${filename}",
       owner  => $c_owner,
       group  => $c_group,
       mode   => $c_mode,
