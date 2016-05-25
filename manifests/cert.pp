@@ -1,6 +1,26 @@
-# = Define: apache::cert
+# == Define: apache::cert
 #
 # This define deploys certificates.
+#
+# === Parameters
+#
+# [*domain*]
+#   The domain-like name for which to deploy a certificate; used as part of the filename.
+# [*type*]
+#   The type of certificate; one of crt, key, ca-bundle
+# [*source*]
+#   The base directory under puppet:// that points to the tls directory
+#
+# === Examples
+#
+#  ::apache::cert { 'wildcard.twovaryingshoes.com.key':
+#    domain => 'wildcard.twovaryingshoes.com',
+#    type   => 'key',
+#    source => '/modules/tvs/profile/httpd/tls',
+#  }
+#
+#  deploys puppet:///modules/tvs/profile/httpd/tls/private/wildcard.twovaryingshoes.com.key
+#  to /etc/pki/tls/private/wildcard.twovaryingshoes.com.key
 #
 define apache::cert (
   $domain,
@@ -41,5 +61,5 @@ define apache::cert (
     mode   => $c_mode,
     notify => $c_notify
   }
-  
+
 }
