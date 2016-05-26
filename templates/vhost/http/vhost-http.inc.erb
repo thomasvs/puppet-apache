@@ -10,10 +10,22 @@
 <% end -%>
 <% end -%>
 
+<% if @default_include && !@default_include.empty? -%>
+    Include conf.d/<%= @default_include %>
+<% else -%>
+    DocumentRoot /var/www/html
+<% end -%>
+
+<% if @includes -%>
+
+    # Additional config snippets from includes
+<% @includes.each do |file| -%>
+    Include conf.d/<%= file %>
+<% end -%>
+<% end -%>
+
     CustomLog logs/<%= @name %>_access_log combined
     CustomLog logs/<%= @name %>-access_timed_log timed_combined
     ErrorLog logs/<%= @name %>_error_log
-
-    Include conf.d/container-http-<%= @name %>.inc
 
 </VirtualHost>

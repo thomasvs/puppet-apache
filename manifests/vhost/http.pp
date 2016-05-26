@@ -12,6 +12,8 @@ define apache::vhost::http (
   $server_name='localhost',
   $server_aliases=undef,
 ) {
+  $default_include = "container-http-${title}.inc"
+
   # make sure we do not declare the .inc file resource when ensure is absent,
   # so a redirect can be configured in the same filename
   if ($ensure == 'present') {
