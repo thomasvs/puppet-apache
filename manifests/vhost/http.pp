@@ -9,10 +9,10 @@
 define apache::vhost::http (
   $ensure='present',
   $apache_template='apache/vhost/http/vhost-http.inc.erb',
-  $server_name='localhost',
+  $server_name='localhost.localdomain',
   $server_aliases=undef,
+  $default_include="container-http-${title}.inc"
 ) {
-  $default_include = "container-http-${title}.inc"
 
   # make sure we do not declare the .inc file resource when ensure is absent,
   # so a redirect can be configured in the same filename
