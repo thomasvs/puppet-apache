@@ -8,6 +8,8 @@
 #   The domain-like name for which to deploy a certificate; used as part of the filename.
 # [*type*]
 #   The type of certificate; one of crt, key, ca-bundle
+# [*letsencrypt*]
+#   If true, symlink letsencrypt certificates instead.
 # [*source*]
 #   The base directory under puppet:// that points to the tls directory
 #
@@ -30,6 +32,7 @@ define apache::cert (
   $c_mode = 0400,
   $c_notify = [],
   $directory = '/etc/pki/tls',
+  $letsencrypt = false,
   $source = '/modules/apache/tls',
 ) {
 
@@ -38,14 +41,17 @@ define apache::cert (
     'crt': {
       $dir = 'certs'
       $filename = "${domain}.${type}"
+      $targetname = "cert.pem"
     }
     'key': {
       $dir = 'private'
       $filename = "${domain}.${type}"
+      $targetname = "privkey.pem"
     }
     'ca-bundle': {
       $dir = 'certs'
       $filename = "${domain}.ca-bundle.crt"
+      $targetname = "fullchain.pem"
     }
     default: {
       fail("Unhandled apache::cert type ${type}")
@@ -53,13 +59,23 @@ define apache::cert (
 
   }
 
-  file {"${directory}/${dir}/${filename}":
-    ensure => file,
-    source => "puppet://${source}/${dir}/${filename}",
-    owner  => $c_owner,
-    group  => $c_group,
-    mode   => $c_mode,
-    notify => $c_notify
+  if $letsencrypt {
+    file {"${directory}/${dir}/${filename}":
+      ensure => link,
+      target => "/etc/letsencrypt/live/${domain}/${targetname}",
+      owner  => $c_owner,
+      group  => $c_group,
+      mode   => $c_mode,
+      notify => $c_notify
+    }
+  } elsif $source {
+    file {"${directory}/${dir}/${filename}":
+      ensure => file,
+      source => "puppet://${source}/${dir}/${filename}",
+      owner  => $c_owner,
+      group  => $c_group,
+      mode   => $c_mode,
+      notify => $c_notify
+    }
   }
-
 }
