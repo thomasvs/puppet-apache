@@ -13,11 +13,11 @@
 <% if @default_include && !@default_include.empty? -%>
     Include conf.d/<%= @default_include %>
 <% else -%>
-    DocumentRoot /var/www/html
+#    FIXME: thomas: separate out document_root option
+#    DocumentRoot /var/www/html
 <% end -%>
 
 <% if @includes -%>
-
     # Additional config snippets from includes
 <% @includes.each do |file| -%>
     Include conf.d/<%= file %>
