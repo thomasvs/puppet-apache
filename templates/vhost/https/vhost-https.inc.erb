@@ -14,7 +14,7 @@
 <% if @default_include && !@default_include.empty? -%>
     Include conf.d/<%= @default_include %>
 <% else -%>
-    DocumentRoot /var/www/html
+    DocumentRoot <%= @document_root %>
 <% end -%>
 
 <% if @includes -%>
