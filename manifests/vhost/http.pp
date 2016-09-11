@@ -12,6 +12,7 @@ define apache::vhost::http (
   $server_name='localhost.localdomain',
   $server_aliases=undef,
   $includes=undef,
+  $log_dir='logs',
   # FIXME: this parameter is messy compared to https
   # invoking with default_include=undef will set it to the value below
   # we want to make it possible to not have any default_include

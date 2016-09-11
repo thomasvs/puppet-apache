@@ -35,9 +35,8 @@
     SSLCACertificateFile /etc/pki/tls/certs/<%= @bundlename %>.crt
 <% end -%>
 
-
-    CustomLog logs/<%= @name %>-ssl-access_log combined
-    CustomLog logs/<%= @name %>-ssl-access_timed_log timed_combined
-    ErrorLog logs/<%= @name %>-ssl-error_log
+    CustomLog <%= @log_dir %>/<%= @name %>-ssl-access_log combined
+    CustomLog <%= @log_dir %>/<%= @name %>-ssl-access_timed_log timed_combined
+    ErrorLog <%= @log_dir %>/<%= @name %>-ssl-error_log
 
 </VirtualHost>

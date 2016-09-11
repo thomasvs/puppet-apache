@@ -8,6 +8,7 @@ define apache::vhost::https (
   $server_name='localhost.localdomain',
   $server_aliases=undef,
   $includes=undef,
+  $log_dir='logs',
   $document_root='/var/www/html',
   $default_include=undef,
   $certname='localhost.localdomain',
