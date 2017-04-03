@@ -20,7 +20,9 @@
 <% if @includes -%>
     # Additional config snippets from includes
 <% @includes.each do |file| -%>
+<% if file && !file.empty? -%>
     Include conf.d/<%= file %>
+<% end -%>
 <% end -%>
 <% end -%>
 
