@@ -12,7 +12,8 @@ define apache::vhost::https (
   $document_root='/var/www/html',
   $default_include=undef,
   $certname='localhost.localdomain',
-  $bundlename=undef
+  $bundlename=undef,
+  $ensure=present,
 ) {
   # Main template file
   $all_requires = [
@@ -32,6 +33,7 @@ define apache::vhost::https (
     apache_httpd::file { "vhost-https-${name}.inc":
       content => template('apache/vhost/https/vhost-https.inc.erb'),
       require => $requires,
+      ensure  => $ensure,
     }
 
 }
