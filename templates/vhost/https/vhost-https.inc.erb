@@ -35,8 +35,12 @@
     SSLCACertificateFile /etc/pki/tls/certs/<%= @bundlename %>.crt
 <% end -%>
 
-    CustomLog <%= @log_dir %>/<%= @name %>-ssl-access_log combined
-    CustomLog <%= @log_dir %>/<%= @name %>-ssl-access_timed_log timed_combined
+    # Exclude abusive bot traffic and loop probes from bloating access logs
+    SetEnvIf User-Agent "(ClaudeBot|GPTBot|CCBot|Bytespider|anthropic-ai|TurnitinBot)" dontlog
+    SetEnvIf Request_URI "(function\.pg-connect|openvideoalliance\.org|refdb\.sourceforge\.net)" dontlog
+
+    CustomLog <%= @log_dir %>/<%= @name %>-ssl-access_log combined env=!dontlog
+    CustomLog <%= @log_dir %>/<%= @name %>-ssl-access_timed_log timed_combined env=!dontlog
     ErrorLog <%= @log_dir %>/<%= @name %>-ssl-error_log
 
 </VirtualHost>
